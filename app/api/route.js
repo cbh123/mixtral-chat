@@ -1,5 +1,5 @@
-import Replicate from "replicate";
-import { ReplicateStream, StreamingTextResponse } from "ai";
+import openai
+#import { ReplicateStream, StreamingTextResponse } from "ai";
 export const runtime = "edge";
 
 const replicate = new Replicate({
@@ -24,16 +24,12 @@ export async function POST(req) {
 }
 
 async function runMixtral({ model, prompt, maxTokens, temperature, topP }) {
-  return await replicate.predictions.create({
-    version: "2b56576fcfbe32fa0526897d8385dd3fb3d36ba6fd0dbe033c72886b81ade93e", // hardcode to mixtral https://replicate.com/mistralai/mixtral-8x7b-instruct-v0.1?utm_source=project&utm_campaign=mixtralai
-    stream: true,
-    input: {
-      prompt: `${prompt}`,
-      prompt_template: "{prompt}",
-      max_new_tokens: maxTokens,
-      temperature: temperature,
-      repetition_penalty: 1,
-      top_p: topP,
-    },
-  });
+  response = openai.Completion.create(
+      engine="mistralai/Mixtral-8x7B-Instruct-v0.1",
+      prompt=`${prompt}`,
+      max_tokens=maxTokens,  # Adjust max tokens as needed
+      temperature=temperature, # Adjust temperature as needed
+      stream = true
+  )
+  return response
 }
